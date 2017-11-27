@@ -1,0 +1,14 @@
+<div hflex="1" vflex="1" sclass="banner">
+	<hbox hflex="1" vflex="1" align="center">
+		<a href="http://www.zkoss.org/">
+			<image src="/image/logo0.png" width="45px" />
+		</a>
+		<div width="400px">
+			<label value="Statistical Downscaling Workbench" sclass="banner-head" />
+		</div>
+		<hbox 
+		 	hflex="1" vflex="1" pack="end" align="end" >
+			<label value="Anonymous"/>
+		</hbox>
+	</hbox>
+</div>

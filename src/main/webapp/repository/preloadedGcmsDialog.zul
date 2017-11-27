@@ -1,0 +1,51 @@
+<window title="Preloaded Gcms" mode="modal" border="normal"
+	width="800px" position="center,center"
+	action="show: slideDown;hide: slideUp"
+	visible="@load(vm.preloadedGcmsMode > 0)">
+	<vlayout>
+		<grid>
+			<columns>
+				<column width="100px"></column>
+			</columns>
+			<rows>
+				<row>
+					Preloaded GCMs:
+					<hbox>
+						<listbox model="@load(vm.preRepo.keySet())"
+							selectedItem="@bind(vm.selectedPreRepo)" height="400px">
+							<listhead>
+								<listheader label="Folder" />
+							</listhead>
+							<template name="model" var="item">
+								<listitem>
+									<listcell label="@load(item.name)" />
+								</listitem>
+							</template>
+						</listbox>
+						<listbox
+							model="@load(vm.preRepo.get(vm.selectedPreRepo))"
+							selectedItems="@bind(vm.selectedPreloadedGcms)" multiple="true"
+							checkmark="true" height="400px">
+							<listhead>
+								<listheader label="File" />
+							</listhead>
+							<template name="model" var="item">
+								<listitem>
+									<listcell label="@load(item.name)" />
+								</listitem>
+							</template>
+						</listbox>
+					</hbox>
+				</row>
+			</rows>
+		</grid>
+		<div align="center">
+			<hlayout>
+				<button label="Save"
+					onClick="@command('loadPreloadedGcms')" width="100px" />
+				<button label="Cancel"
+					onClick="@command('closePreloadedGcms')" width="100px" />
+			</hlayout>
+		</div>
+	</vlayout>
+</window>

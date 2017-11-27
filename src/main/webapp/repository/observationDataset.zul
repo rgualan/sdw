@@ -1,0 +1,124 @@
+<hlayout vflex="1" hflex="1" apply="org.zkoss.bind.BindComposer"
+	viewModel="@id('vm') @init('org.gcta.sdw.web.viewmodel.ClimateDatasetVM')">
+
+	<!-- 	Datasets -->
+	<vbox hflex="1" vflex="1">
+		<listbox hflex="1" vflex="1" model="@load(vm.datasets)"
+			selectedItem="@bind(vm.selectedDataset)">
+			<auxhead>
+				<auxheader colspan="3">Datasets</auxheader>
+			</auxhead>
+			<listhead>
+				<listheader width="50px">Id</listheader>
+				<listheader hflex="1">Short name</listheader>
+				<listheader hflex="3">Long name</listheader>
+			</listhead>
+			<template name="model" var="item">
+				<listitem>
+					<listcell label="@load(item.datasetId)" />
+					<listcell label="@load(item.shortName)" />
+					<listcell label="@load(item.longName)" />
+				</listitem>
+			</template>
+		</listbox>
+		<hbox hflex="1">
+			<button label="Add" onClick="@command('addDataset')"
+				hflex="1" vflex="1" />
+			<button label="Edit" onClick="@command('editDataset')"
+				disabled="@load(empty vm.selectedDataset)" hflex="1" vflex="1" />
+			<button id="deleteCommand" label="Delete"
+				onClick="@command('deleteDataset')"
+				disabled="@load(empty vm.selectedDataset)" hflex="1" vflex="1" />
+			<button label="Refresh" onClick="@command('refreshDataset')"
+				hflex="1" vflex="1" />
+		</hbox>
+	</vbox>
+
+	<!-- Data -->
+	<vbox hflex="2" vflex="1">
+		<listbox vflex="1" hflex="1"
+			model="@load(vm.selectedDataset.dataList)"
+			selectedItem="@bind(vm.selectedData)">
+			<auxhead>
+				<auxheader colspan="6">Stations</auxheader>
+			</auxhead>
+			<listhead>
+				<listheader width="50px">Id</listheader>
+				<listheader hflex="2">Name</listheader>
+				<listheader hflex="1">Code</listheader>
+				<listheader hflex="1">Longitude</listheader>
+				<listheader hflex="1">Latitude</listheader>
+				<listheader hflex="1">Height</listheader>
+			</listhead>
+			<template name="model" var="item">
+				<listitem>
+					<listcell label="@load(item.dataPK.dataId)" />
+					<listcell label="@load(item.name)" />
+					<listcell label="@load(item.code)" />
+					<listcell label="@load(item.longitude)" />
+					<listcell label="@load(item.latitude)" />
+					<listcell label="@load(item.height)" />
+				</listitem>
+			</template>
+		</listbox>
+		<hbox hflex="1" pack="center">
+			<button label="Add" onClick="@command('addData')"
+				disabled="@load(empty vm.selectedDataset)" width="100px" vflex="1" />
+			<button label="Edit" onClick="@command('editData')"
+				autodisable="self" disabled="@load(empty vm.selectedData)"
+				width="100px" />
+			<button label="Delete" onClick="@command('deleteData')"
+				autodisable="self" disabled="@load(empty vm.selectedData)"
+				width="100px" />
+			<button label="Preloaded" autodisable="self"
+				onClick="@command('showPreloadedStations')"
+				disabled="@load(empty vm.selectedDataset)" width="100px" />
+		</hbox>
+	</vbox>
+
+	<!-- Variables -->
+	<vbox hflex="1" vflex="1">
+		<listbox vflex="1" hflex="1"
+			model="@load(vm.selectedData.datavariableList)"
+			selectedItem="@bind(vm.selectedVariable)">
+			<auxhead>
+				<auxheader colspan="4">Variables</auxheader>
+			</auxhead>
+			<listhead>
+				<listheader width="50px">Id</listheader>
+				<listheader>Short name</listheader>
+				<listheader>Full name</listheader>
+				<listheader>Units</listheader>
+			</listhead>
+			<template name="model" var="item">
+				<listitem>
+					<listcell
+						label="@load(item.datavariablePK.variableId)" />
+					<listcell label="@load(item.shortName)" />
+					<listcell label="@load(item.fullName)" />
+					<listcell label="@load(item.units)" />
+				</listitem>
+			</template>
+		</listbox>
+		<hbox hflex="1" pack="center">
+			<button label="Add" onClick="@command('addVariable')"
+				autodisable="self" disabled="@load(empty vm.selectedData)" hflex="1"
+				vflex="1" />
+			<button label="Edit" onClick="@command('editVariable')"
+				autodisable="self" disabled="@load(empty vm.selectedVariable)"
+				hflex="1" vflex="1" />
+			<button label="Delete" onClick="@command('deleteVariable')"
+				autodisable="self" disabled="@load(empty vm.selectedVariable)"
+				hflex="1" vflex="1" />
+			<button label="More" onClick="@command('moreVariable')"
+				autodisable="self" disabled="@load(empty vm.selectedVariable)"
+				hflex="1" vflex="1" />
+		</hbox>
+	</vbox>
+
+	<!-- 	Windows -->
+	<include src="/repository/datasetDialog.zul" datasetType="2" />
+	<include src="/repository/dataStationDialog.zul" />
+	<include src="/repository/variableDialog.zul" datasetType="2" />
+	<include src="/repository/preloadedStationsDialog.zul"/>
+</hlayout>

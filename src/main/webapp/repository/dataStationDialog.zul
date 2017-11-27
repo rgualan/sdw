@@ -1,0 +1,52 @@
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c"?>
+
+<window title="Station" mode="modal" border="normal" width="500px"
+	position="center,center" visible="@load(vm.dataDialogMode > 0)"
+	form="@id('fx') @load(vm.selectedData) @save(vm.selectedData, before='saveData')">
+	<vlayout>
+		<grid>
+			<columns>
+				<column width="100px"></column>
+			</columns>
+			<rows>
+				<row>
+					Id
+					<label value="@load(fx.dataPK.dataId)" />
+				</row>
+				<row>
+					Name:
+					<textbox value="@bind(fx.name)"
+						disabled="@load(vm.dataDialogMode eq 3)" width="300px" />
+				</row>
+				<row>
+					Code:
+					<textbox value="@bind(fx.code)"
+						disabled="@load(vm.dataDialogMode eq 3)" width="100px" />
+				</row>
+				<row>
+					Height:
+					<textbox value="@bind(fx.height)"
+						disabled="@load(vm.dataDialogMode eq 3)" />
+				</row>
+				<row>
+					Longitude:
+					<textbox value="@bind(fx.longitude)"
+						disabled="@load(vm.dataDialogMode eq 3)" />
+				</row>
+				<row>
+					Latitude:
+					<textbox value="@bind(fx.latitude)"
+						disabled="@load(vm.dataDialogMode eq 3)" />
+				</row>
+			</rows>
+		</grid>
+		<div align="center">
+			<hlayout>
+				<button label="Save"
+					onClick="@command('saveData')" width="100px" />
+				<button label="Close"
+					onClick="@command('closeDataDialog')" width="100px" />
+			</hlayout>
+		</div>
+	</vlayout>
+</window>

@@ -1,0 +1,18 @@
+<tabbox width="1200px" height="600px">
+	<tabs>
+		<tab label="GCM" />
+		<tab label="Reanalysis" />
+		<tab label="Observations" />
+	</tabs>
+	<tabpanels>
+		<tabpanel>
+			<include src="/repository/climateDataset.zul" datasetType="1"></include>
+		</tabpanel>
+		<tabpanel>
+			<include src="/repository/climateDataset.zul" datasetType="2"></include>
+		</tabpanel>
+		<tabpanel>
+			<include src="/repository/observationDataset.zul" datasetType="3"></include>
+		</tabpanel>
+	</tabpanels>
+</tabbox>

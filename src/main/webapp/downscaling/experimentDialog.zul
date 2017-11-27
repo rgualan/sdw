@@ -1,0 +1,40 @@
+<window title="Experiment" mode="modal" border="normal" width="400px"
+	position="center,center" action="show: slideDown;hide: slideUp"
+	visible="@load(vm.experimentDialogMode > 0)"
+	form="@id('fx') @load(vm.selectedExperiment) @save(vm.selectedExperiment, before='saveExperiment')">
+	<vlayout>
+		<grid>
+			<columns>
+				<column width="100px"></column>
+			</columns>
+			<rows>
+				<row>
+					Id:
+					<textbox value="@bind(fx.experimentId)"
+						disabled="true" />
+				</row>
+				<row>
+					Creation date:
+					<textbox value="@bind(fx.creationDate) @converter('formatedDate', format='yyyy-MM-dd hh:mm')" />
+				</row>
+				<row>
+					Name:
+					<textbox value="@bind(fx.name)" />
+				</row>
+				<row>
+					Description:
+					<textbox value="@bind(fx.description)" width="99%"
+						rows="5" />
+				</row>
+			</rows>
+		</grid>
+		<div align="center">
+			<hlayout>
+				<button label="Save" onClick="@command('saveExperiment')"
+					width="100px" />
+				<button label="Cancel"
+					onClick="@command('closeExperimentDialog')" width="100px" />
+			</hlayout>
+		</div>
+	</vlayout>
+</window>

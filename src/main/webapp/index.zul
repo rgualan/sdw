@@ -1,0 +1,27 @@
+<?link rel="stylesheet" type="text/css" href="/css/style.css"?>
+<?page title="Statistical Downscaling Workbench"?>
+
+<zk>
+	<zscript>
+	String startForm = "/downscaling.zul";
+</zscript>
+	<borderlayout hflex="1" vflex="1">
+		<north height="60px" border="none">
+			<include src="/layout/banner.zul" />
+		</north>
+		<west width="260px" border="none" collapsible="true"
+			splittable="true" minsize="300">
+			<include src="/mainMenu.zul" />
+		</west>
+		<center id="mainContent" autoscroll="true" border="none">
+			<box align="center" pack="center" hflex="1" vflex="1">
+				<!-- the main content will be insert here -->
+				<include id="mainContentInclude" src="${startForm}"
+					style="padding:10px" />
+			</box>
+		</center>
+<!-- 		<south height="30px" border="none"> -->
+<!-- 			<include src="/layout/footer.zul" /> -->
+<!-- 		</south> -->
+	</borderlayout>
+</zk>

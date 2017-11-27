@@ -1,0 +1,12 @@
+<window width="400px" title="Timeout" border="normal"
+	position="center,center" mode="overlapped">
+	<div align="center">
+		<!-- 		The page or component you request is no longer available. This -->
+		<!-- 		is normally caused by timeout, opening too many Web pages, or -->
+		<!-- 		rebooting the server. -->
+		La página o el componente requerido no está disponible.
+	</div>
+	<div align="center" >
+		<button label="Ingresar" href="/login.zul"></button>
+	</div>
+</window>

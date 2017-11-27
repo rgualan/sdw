@@ -1,0 +1,48 @@
+<window title="Dataset-Observations" mode="modal" border="normal"
+	width="600px" position="center,center"
+	visible="@load(vm.datasetDialogMode > 0)"
+	form="@id('fx') @load(vm.selectedDataset) @save(vm.selectedDataset, before='saveDataset')">
+	<vlayout>
+		<grid>
+			<columns>
+				<column width="100px"></column>
+			</columns>
+			<rows>
+				<row>
+					Id:
+					<textbox value="@bind(fx.datasetId)"
+						disabled="true" />
+				</row>
+				<row>
+					Short name:
+					<textbox value="@bind(fx.shortName)" />
+				</row>
+				<row>
+					Long name:
+					<textbox value="@bind(fx.longName)" width="99%" />
+				</row>
+				<row>
+					Description:
+					<textbox value="@bind(fx.description)" width="99%"
+						rows="5" />
+				</row>
+<!-- 				<row> -->
+<!-- 					Scenario: -->
+<!-- 					<textbox value="@bind(fx.scenario)" /> -->
+<!-- 				</row> -->
+<!-- 				<row> -->
+<!-- 					Reference: -->
+<!-- 					<textbox value="@bind(fx.reference)" width="99%" /> -->
+<!-- 				</row> -->
+			</rows>
+		</grid>
+		<div align="center">
+			<hlayout>
+				<button id="saveBtn" hflex="0" label="Save"
+					onClick="@command('saveDataset')" />
+				<button id="closeBtn" hflex="0" label="Cancel"
+					onClick="@command('cancelDataset')" />
+			</hlayout>
+		</div>
+	</vlayout>
+</window>

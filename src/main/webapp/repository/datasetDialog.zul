@@ -1,0 +1,82 @@
+<window title="Dataset" mode="modal" border="normal" width="600px"
+	position="center,center" action="show: slideDown;hide: slideUp"
+	visible="@load(vm.datasetDialogMode > 0)"
+	form="@id('fx') @load(vm.selectedDataset) @save(vm.selectedDataset, before='saveDataset')">
+	<vlayout>
+		<!-- 		<label value="${arg.type}"/> -->
+		<!-- 		arg.datasetType: 1:for climate datasets 2:for observation datasets -->
+		<grid>
+			<columns>
+				<column width="100px"></column>
+			</columns>
+			<rows>
+				<row>
+					Id:
+					<textbox value="@bind(fx.datasetId)"
+						disabled="true" />
+				</row>
+				<row>
+					Short name:
+					<textbox value="@bind(fx.shortName)" />
+				</row>
+				<row>
+					Long name:
+					<textbox value="@bind(fx.longName)" width="99%" />
+				</row>
+				<row>
+					Description:
+					<textbox value="@bind(fx.description)" width="99%"
+						rows="5" />
+				</row>
+				<row visible="${arg.datasetType == 1}">
+					Scenario:
+					<listbox model="@load(vm.scenarios)"
+						selectedItem="@bind(fx.scenario)" mold="select">
+						<listhead>
+							<listheader label="Id" width="50px" />
+							<listheader label="Name" width="140px" />
+						</listhead>
+						<template name="model" var="item">
+							<listitem>
+								<listcell
+									label="@load(item.scenarioId)" />
+								<listcell
+									label="@load(item.name)" />
+							</listitem>
+						</template>
+					</listbox>
+				</row>
+				<row visible="${arg.datasetType == 1}">
+					Center:
+					<listbox model="@load(vm.centers)"
+						selectedItem="@bind(fx.center)" mold="select">
+						<listhead>
+							<listheader label="Id" width="50px" />
+							<listheader label="Name" width="140px" />
+						</listhead>
+						<template name="model" var="item">
+							<listitem>
+								<listcell
+									label="@load(item.centerId)" />
+								<listcell
+									label="@load(item.name)" />
+							</listitem>
+						</template>
+					</listbox>
+				</row>
+				<row visible="${arg.datasetType == 1}">
+					Reference:
+					<textbox value="@bind(fx.reference)" width="99%" />
+				</row>
+			</rows>
+		</grid>
+		<div align="center">
+			<hlayout>
+				<button label="Save" onClick="@command('saveDataset')"
+					width="100px" />
+				<button label="Cancel"
+					onClick="@command('closeDatasetDialog')" width="100px" />
+			</hlayout>
+		</div>
+	</vlayout>
+</window>

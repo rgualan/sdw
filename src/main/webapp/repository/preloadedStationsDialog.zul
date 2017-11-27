@@ -1,0 +1,48 @@
+<window title="Preloaded Stations" mode="modal" border="normal"
+	width="600px" position="center,center"
+	action="show: slideDown;hide: slideUp"
+	visible="@load(vm.preloadedStationsMode > 0)">
+	<vlayout>
+		<grid>
+			<columns>
+				<column width="100px"></column>
+			</columns>
+			<rows>
+				<row>
+					Preloaded Stations:
+					<listbox model="@load(vm.preloadedStations)"
+						selectedItems="@bind(vm.selectedPreloadedStations)"
+						multiple="true" checkmark="true" height="400px">
+						<listhead>
+							<listheader label="Code" hflex="1" />
+							<listheader label="Name" hflex="2" />
+							<listheader label="Latitude" hflex="1"
+								align="right" />
+							<listheader label="Longitude" hflex="1"
+								align="right" />
+							<listheader label="Height" hflex="1"
+								align="right" />
+						</listhead>
+						<template name="model" var="item">
+							<listitem>
+								<listcell label="@load(item.code)" />
+								<listcell label="@load(item.name)" />
+								<listcell label="@load(item.latitude)" />
+								<listcell label="@load(item.longitude)" />
+								<listcell label="@load(item.height)" />
+							</listitem>
+						</template>
+					</listbox>
+				</row>
+			</rows>
+		</grid>
+		<div align="center">
+			<hlayout>
+				<button label="Save"
+					onClick="@command('loadPreloadedStations')" width="100px" />
+				<button label="Cancel"
+					onClick="@command('closePreloadedStations')" width="100px" />
+			</hlayout>
+		</div>
+	</vlayout>
+</window>

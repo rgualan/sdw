@@ -1,0 +1,669 @@
+<vbox apply="org.zkoss.bind.BindComposer"
+	viewModel="@id('vm') @init('org.gcta.sdw.web.viewmodel.DownscalingVM')">
+	<tabbox width="1100px" height="600px">
+		<tabs>
+			<tab label="Experiments" />
+
+			<!-- 			<tab label="Predictor" -->
+			<!-- 				disabled="@load(empty vm.selectedExperiment)" /> -->
+			<!-- 			<tab label="Predictand" -->
+			<!-- 				disabled="@load(empty vm.predictor || empty vm.selectedExperiment.predictor)" /> -->
+			<!-- 			<tab label="Downscaling method" -->
+			<!-- 				disabled="@load(empty vm.predictand || empty vm.selectedExperiment.predictand)" /> -->
+			<!-- 			<tab label="Downscale" -->
+			<!-- 				disabled="@load(empty vm.configuration || empty vm.selectedExperiment.configuration)" /> -->
+			<tab label="Predictor" />
+			<tab label="Predictand" />
+			<tab label="Downscaling method" />
+			<tab label="Downscale" />
+
+		</tabs>
+		<tabpanels>
+			<!-- +++++++++++++++ -->
+			<!-- Experiments -->
+			<!-- +++++++++++++++ -->
+			<tabpanel>
+				<vbox hflex="1" vflex="1">
+					<toolbar>
+						<toolbarbutton label="Refresh"
+							onClick="@command('refreshExperiments')"
+							image="/image/commands/Refresh16.png" />
+						<toolbarbutton label="Open"
+							onClick="@command('openExperiment')"
+							disabled="@load(empty vm.selectedExperiment)"
+							image="/image/commands/Analysis16.png" visible="false" />
+						<toolbarbutton label="Delete"
+							onClick="@command('deleteExperiment')"
+							disabled="@load(empty vm.selectedExperiment)"
+							image="/image/commands/delete216.png" />
+						<toolbarbutton label="New"
+							onClick="@command('newExperiment')"
+							image="/image/commands/add116.png" />
+						<toolbarbutton label="Clear"
+							onClick="@command('clearAll')" />
+					</toolbar>
+					<listbox hflex="1" vflex="1"
+						model="@load(vm.experiments)"
+						selectedItem="@bind(vm.selectedExperiment)">
+						<listhead>
+							<listheader width="50px">Id</listheader>
+							<listheader width="150px">
+								Creation date
+							</listheader>
+							<listheader width="150px">Name</listheader>
+							<listheader hflex="1">
+								Description
+							</listheader>
+						</listhead>
+						<template name="model" var="item">
+							<listitem>
+								<listcell
+									label="@load(item.experimentId)" />
+								<listcell
+									label="@load(item.creationDate) @converter('formatedDate', format='yyyy-MM-dd hh:mm')" />
+								<listcell label="@load(item.name)" />
+								<listcell
+									label="@load(item.description)" />
+							</listitem>
+						</template>
+					</listbox>
+				</vbox>
+			</tabpanel>
+			<!-- +++++++++++++++ -->
+			<!-- Predictor -->
+			<!-- +++++++++++++++ -->
+			<tabpanel>
+				<vbox spacing="10px">
+					<button label="Create Predictor"
+						onClick="@command('createPredictor')"
+						visible="@load(not empty vm.selectedExperiment and empty vm.selectedExperiment.predictor )" />
+					<grid>
+						<columns>
+							<column width="100px"></column>
+						</columns>
+						<rows>
+							<row>
+								Reanalisys:
+								<listbox
+									model="@load(vm.reanalisysGcms)"
+									selectedItem="@bind(vm.selectedReanalisys)" mold="select"
+									disabled="@load(vm.predictorMode eq 0)">
+									<listhead>
+										<listheader label="Name"
+											width="140px" />
+									</listhead>
+									<template name="model" var="item">
+										<listitem>
+											<listcell
+												label="@load(item.shortName)" />
+										</listitem>
+									</template>
+								</listbox>
+							</row>
+							<row>
+								Start date:
+								<datebox
+									value="@bind(vm.predictor.startDate)" format="dd-MM-yyyy"
+									disabled="@load(vm.predictorMode eq 0)" />
+							</row>
+							<row>
+								End date:
+								<hbox>
+									<datebox
+										value="@bind(vm.predictor.endDate)" format="dd-MM-yyyy"
+										disabled="@load(vm.predictorMode eq 0)" />
+									<button label="Check" width="50px"
+										onClick="@command('checkCompatibleObsDatasetCmd')"
+										disabled="@load(empty vm.predictor.startDate or empty vm.predictor.endDate or 
+										vm.predictorMode eq 0)" />
+								</hbox>
+							</row>
+							<row>
+								Longitude:
+								<hbox>
+									<textbox
+										value="@bind(vm.predictor.longStart)" width="50px"
+										disabled="true" />
+									<label value="to" />
+									<textbox
+										value="@bind(vm.predictor.longEnd)" width="50px"
+										disabled="true" />
+									<label value=":" />
+									<textbox
+										value="@bind(vm.predictor.longRes)" width="50px"
+										disabled="true" />
+								</hbox>
+							</row>
+							<row>
+								Latitude:
+								<hbox>
+									<textbox
+										value="@bind(vm.predictor.latStart)" width="50px"
+										disabled="true" />
+									<label value="to" />
+									<textbox
+										value="@bind(vm.predictor.latEnd)" width="50px"
+										disabled="true" />
+									<label value=":" />
+									<textbox
+										value="@bind(vm.predictor.latRes)" width="50px"
+										disabled="true" />
+								</hbox>
+							</row>
+						</rows>
+					</grid>
+					<hbox>
+						<grid hflex="3">
+							<columns>
+								<column width="100px"></column>
+							</columns>
+							<rows>
+								<row>
+									<vbox>
+										<label
+											value="Available fields to the predictor (var-level):" />
+									</vbox>
+
+									<hbox>
+										<listbox
+											model="@load(vm.availableVars)"
+											selectedItem="@bind(vm.selectedAvailableVar)" height="300px"
+											width="250px">
+											<listhead>
+												<listheader
+													label="Variable" />
+												<listheader label="Id"
+													width="40px" />
+											</listhead>
+											<template name="model"
+												var="item">
+												<listitem
+													disabled="@load(vm.predictorMode eq 0)">
+													<listcell
+														label="@load(item.name)" />
+													<listcell
+														label="@load(item.stdVarId)" />
+												</listitem>
+											</template>
+										</listbox>
+										<listbox
+											model="@load(vm.availableLevelsMap.get(vm.selectedAvailableVar))"
+											selectedItems="@bind(vm.selectedAvailableLevels)"
+											multiple="true" height="300px" width="100px">
+											<listhead>
+												<listheader
+													label="Level" />
+											</listhead>
+											<template name="model"
+												var="item">
+												<listitem
+													disabled="@load(vm.predictorMode eq 0)">
+													<listcell
+														label="@load(item)" />
+												</listitem>
+											</template>
+										</listbox>
+										<vbox width="34px" vflex="1"
+											align="center" pack="center">
+											<button label=">"
+												width="30px" onClick="@command('addVariable')"
+												disabled="@load(empty vm.selectedAvailableLevels)" />
+										</vbox>
+										<listbox
+											model="@load(vm.selectedVars)"
+											selectedItem="@bind(vm.selectedVar)" height="300px"
+											width="150px" disabled="@load(vm.predictorMode eq 0)">
+											<listhead>
+												<listheader
+													label="Variable-Level" />
+											</listhead>
+											<template name="model"
+												var="item">
+												<listitem>
+													<listcell
+														label="@load(item.label)" />
+												</listitem>
+											</template>
+										</listbox>
+										<vbox width="34px" vflex="1"
+											align="center" pack="center"
+											visible="@load(vm.predictorMode eq 1)">
+											<button label="U"
+												width="30px" onClick="@command('upSelectedVariable')"
+												disabled="@load(empty vm.selectedVar)" />
+											<button label="D"
+												width="30px" onClick="@command('downSelectedVariable')"
+												disabled="@load(empty vm.selectedVar)" />
+											<button label="-"
+												width="30px" onClick="@command('deleteSelectedVariable')"
+												disabled="@load(empty vm.selectedVar)" />
+										</vbox>
+									</hbox>
+								</row>
+							</rows>
+						</grid>
+
+						<!-- Compatible GCMS -->
+						<grid hflex="1">
+							<rows>
+								<row>
+									<listbox
+										model="@load(vm.compatibleGcms)" height="150px">
+										<listhead>
+											<listheader
+												label="Compatible GCMs" />
+											<listheader
+												label="Is compatible?" />
+										</listhead>
+										<template name="model"
+											var="item">
+											<listitem>
+												<listcell
+													label="@load(item.key.shortName)" />
+												<listcell
+													label="@load(item.value)" />
+											</listitem>
+										</template>
+									</listbox>
+								</row>
+								<row>
+									<listbox
+										model="@load(vm.compatibleObsDatasets)" height="140px">
+										<listhead>
+											<listheader
+												label="Compatible Obs" />
+											<listheader
+												label="Is compatible?" />
+										</listhead>
+										<template name="model"
+											var="item">
+											<listitem>
+												<listcell
+													label="@load(item.key.shortName)" />
+												<listcell
+													label="@load(item.value)" />
+											</listitem>
+										</template>
+									</listbox>
+								</row>
+							</rows>
+						</grid>
+					</hbox>
+				</vbox>
+			</tabpanel>
+			<!-- +++++++++++++++ -->
+			<!-- Predictand -->
+			<!-- +++++++++++++++ -->
+			<tabpanel>
+				<vbox>
+					<button label="Create Predictand"
+						onClick="@command('createPredictand')"
+						visible="@load(not empty vm.selectedExperiment and empty vm.selectedExperiment.predictand )" />
+					<grid>
+						<columns>
+							<column width="150px" />
+						</columns>
+						<rows>
+							<row>
+								<label value="Dataset" />
+								<listbox
+									model="@load(vm.observationSets)"
+									selectedItem="@bind(vm.selectedObservationDataset)"
+									mold="select" disabled="@load(vm.predictandMode eq 0)">
+									<listhead>
+										<listheader />
+									</listhead>
+									<template name="model" var="item">
+										<listitem>
+											<listcell
+												label="@load(item.shortName)" />
+										</listitem>
+									</template>
+								</listbox>
+							</row>
+							<row>
+								<label value="Variable" />
+								<listbox
+									model="@load(vm.availablePredictandVariables)"
+									selectedItem="@bind(vm.selectedPredictandVariable)"
+									mold="select" disabled="@load(vm.predictandMode eq 0)">
+									<listhead>
+										<listheader />
+									</listhead>
+									<template name="model" var="item">
+										<listitem>
+											<listcell
+												label="@load(item.name)" />
+										</listitem>
+									</template>
+								</listbox>
+							</row>
+							<row>
+								<label value="Stations" />
+								<listbox
+									model="@load(vm.availableStations)"
+									selectedItems="@bind(vm.selectedStations)" multiple="true"
+									checkmark="true">
+									<listhead>
+										<listheader label="Code" />
+										<listheader label="Name" />
+										<listheader label="Height" />
+										<listheader label="Latitude" />
+										<listheader label="Longitude" />
+									</listhead>
+									<template name="model" var="item">
+										<listitem
+											disabled="@load(vm.predictandMode eq 0)">
+											<listcell
+												label="@load(item.code)" />
+											<listcell
+												label="@load(item.name)" />
+											<listcell
+												label="@load(item.height)" />
+											<listcell
+												label="@load(item.longitude)" />
+											<listcell
+												label="@load(item.latitude)" />
+										</listitem>
+									</template>
+								</listbox>
+							</row>
+						</rows>
+					</grid>
+					<button label="Save predictor &amp; predictand"
+						onClick="@command('savePredictorPredictand')"
+						visible="@load(vm.predictorMode eq 1 and vm.predictandMode eq 1)" />
+
+				</vbox>
+			</tabpanel>
+			<!-- +++++++++++++++ -->
+			<!-- Downscaling method -->
+			<!-- +++++++++++++++ -->
+			<tabpanel>
+				<vbox>
+					<button label="Create configuration"
+						onClick="@command('createConfiguration')"
+						visible="@load(not empty vm.selectedExperiment and empty vm.selectedExperiment.configuration and vm.configurationMode eq 0)" />
+					<groupbox mold="3d">
+						<caption label="Downscaling method" />
+						<grid>
+							<columns>
+								<column width="200px" />
+							</columns>
+							<rows>
+								<row>
+									Downscaling Method
+									<listbox
+										model="@load(vm.downscalingMethods)"
+										selectedItem="@bind(vm.selectedDmethod)"
+										mold="select" disabled="@load(vm.configurationMode eq 0)">
+										<template name="model"
+											var="item">
+											<listitem>
+												<listcell
+													label="@load(item.name)" />
+											</listitem>
+										</template>
+									</listbox>
+								</row>
+							</rows>
+						</grid>
+					</groupbox>
+					<groupbox mold="3d">
+						<caption label="Parameters" />
+						<!-- ANN parameters -->
+						<grid
+							visible="@load(vm.selectedDmethod.name eq 'ANN')">
+							<columns>
+								<column width="200px" />
+							</columns>
+							<rows>
+								<row>
+									Network - layer 1 - size
+									<decimalbox format="###"
+										value="@bind(vm.mapParameters['network.layer1.size'].intValue)"
+										width="150px" disabled="@load(vm.configurationMode eq 0)" />
+								</row>
+								<row>
+									Network - layer 1 - transferFcn
+									<listbox
+										model="@load(vm.transferFcns)"
+										selectedItem="@bind(vm.mapParameters['network.layer1.transferFcn'].stringValue)"
+										mold="select" disabled="@load(vm.configurationMode eq 0)">
+										<template name="model"
+											var="item">
+											<listitem>
+												<listcell
+													label="@load(item)" />
+											</listitem>
+										</template>
+									</listbox>
+								</row>
+								<row>
+									Network - layer 2 - size
+									<decimalbox format="###"
+										value="@bind(vm.mapParameters['network.layer2.size'].intValue)"
+										width="150px" disabled="@load(vm.configurationMode eq 0)" />
+								</row>
+								<row>
+									Network - layer 2 - transferFcn
+									<listbox
+										model="@load(vm.transferFcns)"
+										selectedItem="@bind(vm.mapParameters['network.layer2.transferFcn'].stringValue)"
+										mold="select" disabled="@load(vm.configurationMode eq 0)">
+										<template name="model"
+											var="item">
+											<listitem>
+												<listcell
+													label="@load(item)" />
+											</listitem>
+										</template>
+									</listbox>
+								</row>
+								<row>
+									Calibration iterations
+									<decimalbox format="###"
+										value="@bind(vm.mapParameters['calibration.iterations'].intValue)"
+										width="150px" disabled="@load(vm.configurationMode eq 0)" />
+								</row>
+							</rows>
+						</grid>
+						<!-- SVM parameters -->
+						<grid
+							visible="@load(vm.selectedDmethod.name eq 'SVM')">
+							<columns>
+								<column width="200px" />
+							</columns>
+							<rows>
+								<row>
+									Kernel
+									<listbox
+										model="@load(vm.svmKernels)"
+										selectedItem="@bind(vm.mapParameters['svm.kernel'].stringValue)"
+										mold="select" disabled="@load(vm.configurationMode eq 0)">
+										<template name="model"
+											var="item">
+											<listitem>
+												<listcell
+													label="@load(item)" />
+											</listitem>
+										</template>
+									</listbox>
+								</row>
+							</rows>
+						</grid>
+					</groupbox>
+					<groupbox mold="3d">
+						<caption label="Test options" />
+						<grid>
+							<columns>
+								<column width="200px" />
+							</columns>
+							<rows>
+								<row>
+									<label value="Train percentage (%)" />
+									<decimalbox format="###.##"
+										value="@bind(vm.configuration.testPercentage)" width="150px"
+										disabled="@load(vm.configurationMode eq 0)" />
+								</row>
+							</rows>
+						</grid>
+					</groupbox>
+					<button label="Save configuration"
+						onClick="@command('saveConfiguration')"
+						visible="@load(vm.configurationMode eq 1)" />
+				</vbox>
+			</tabpanel>
+			<!-- +++++++++++++++ -->
+			<!-- Downscale -->
+			<!-- +++++++++++++++ -->
+			<tabpanel>
+				<vbox hflex="1">
+					<hbox align="center" pack="center">
+						<label value="Stations" />
+						<listbox model="@load(vm.predictand.dataList)"
+							selectedItem="@bind(vm.selectedStationForPreview)"
+							mold="select">
+							<listhead>
+								<listheader label="Code" />
+								<listheader label="Name" />
+							</listhead>
+							<template name="model" var="item">
+								<listitem>
+									<listcell label="@load(item.code)" />
+									<listcell label="@load(item.name)" />
+								</listitem>
+							</template>
+						</listbox>
+					</hbox>
+					<tabbox height="500px">
+						<tabs>
+							<tab label="Train-test dataset" />
+							<tab label="GCM dataset" />
+							<tab label="Downscaling results" />
+						</tabs>
+						<tabpanels>
+							<!-- Train-test dataset-->
+							<tabpanel>
+								<button label="Load train-test dataset"
+									onClick="@command('loadTrainDataset')"
+									visible="@load(not empty vm.selectedExperiment and not empty vm.selectedExperiment.configuration)" />
+								<button label="Export to CSV"
+									onClick="@command('exportTrainDataset')"
+									visible="@load(not empty vm.mapTrainDataset)" />
+								<listbox
+									model="@load(vm.mapTrainDataset.get(vm.selectedStationForPreview).toMatrix())"
+									vflex="1" hflex="1"
+									visible="@load(not empty vm.mapTrainDataset)" mold="paging"
+									pageSize="24" width="1000px">
+									<listhead
+										children="@load(vm.mapTrainDataset.get(vm.selectedStationForPreview).columnNames)"
+										sizable="true">
+										<listheader label="Date" />
+										<template name="children"
+											var="column">
+											<listheader
+												label="@load(column)" width="100px" />
+										</template>
+									</listhead>
+									<template name="model" var="item">
+										<listitem
+											children="@load(item) @template(forEachStatus.index eq 0?'model1':'model2')">
+											<template name="model1"
+												var="cell">
+												<listcell
+													label="@load(cell) @converter('formatedDate', format='yyyy-MM-dd')" />
+											</template>
+											<template name="model2"
+												var="cell">
+												<listcell
+													label="@load(cell) @converter('formatedNumber', format='###,##0.00')" />
+											</template>
+										</listitem>
+									</template>
+								</listbox>
+							</tabpanel>
+							<!-- GCM dataset -->
+							<tabpanel>
+								<vbox>
+									<hbox pack="center"
+										align="center">
+										GCM Dataset:
+										<listbox
+											model="@load(vm.availableGcms)"
+											selectedItem="@bind(vm.gcmForDownscaling)" mold="select">
+											<template name="model"
+												var="item">
+												<listitem>
+													<listcell
+														label="@load(item.shortName)" />
+												</listitem>
+											</template>
+										</listbox>
+										Downscaling period:
+										<datebox
+											value="@bind(vm.simulationStartDate)" format="MM-yyyy" />
+										to
+										<datebox
+											value="@bind(vm.simulationEndDate)" format="MM-yyyy" />
+										<button
+											label="Load future dataset"
+											onClick="@command('loadFutureDataset')" />
+										<button label="Export to CSV"
+											onClick="@command('exportFutureDataset')"
+											visible="@load(not empty vm.mapFutureDataset)" />
+									</hbox>
+								</vbox>
+								<listbox
+									model="@load(vm.mapFutureDataset.get(vm.selectedStationForPreview).toMatrix())"
+									vflex="1" visible="@load(not empty vm.mapFutureDataset)"
+									mold="paging" pageSize="24"
+									width="1000px">
+									<listhead
+										children="@load(vm.mapFutureDataset.get(vm.selectedStationForPreview).columnNames)" sizable="true">
+										<listheader label="Date" />
+										<template name="children"
+											var="column">
+											<listheader
+												label="@load(column)" width="100px"/>
+										</template>
+									</listhead>
+									<template name="model" var="item">
+										<listitem
+											children="@load(item) @template(forEachStatus.index eq 0?'model1':'model2')">
+											<template name="model1"
+												var="cell">
+												<listcell
+													label="@load(cell) @converter('formatedDate', format='yyyy-MM-dd')" />
+												<!-- 												<listcell -->
+												<!-- 													label="@load(cell)" /> -->
+											</template>
+											<template name="model2"
+												var="cell">
+												<listcell
+													label="@load(cell) @converter('formatedNumber', format='###,##0.00')" />
+												<!-- 												<listcell -->
+												<!-- 													label="@load(cell)" /> -->
+											</template>
+										</listitem>
+									</template>
+								</listbox>
+							</tabpanel>
+							<!-- Downscale -->
+							<tabpanel>
+								<vbox hflex="1" vflex="1">
+									<button label="Run downscale"
+										onClick="@command('downscale')" />
+									<textbox
+										value="@bind(vm.downscaleLog)" width="80%" height="80%"
+										disabled="false" multiline="true" readonly="true" rows="25" />
+								</vbox>
+							</tabpanel>
+						</tabpanels>
+					</tabbox>
+				</vbox>
+			</tabpanel>
+		</tabpanels>
+	</tabbox>
+	<include src="/downscaling/experimentDialog.zul" />
+</vbox>

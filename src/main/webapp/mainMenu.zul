@@ -1,0 +1,16 @@
+<div>
+	<zscript><![CDATA[
+        Map map = new LinkedHashMap();
+        map.put(0, "/repository.zul");
+        map.put(1, "/downscaling.zul");
+    ]]></zscript>
+	<listbox id="menuListBox" height="100%" width="100%"
+		onSelect="mainContentInclude.setSrc(map.get(self.getSelectedIndex()))">
+		<listitem>
+			<listcell label="Dataset Repository" />
+		</listitem>
+		<listitem>
+			<listcell label="Statistical Downscaling" />
+		</listitem>
+	</listbox>
+</div>

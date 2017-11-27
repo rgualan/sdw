@@ -1,0 +1,74 @@
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c"?>
+
+<window title="Data" mode="modal" border="normal" width="800px"
+	position="center,center" action="show: slideDown;hide: slideUp"
+	visible="@load(vm.dataDialogMode > 0)"
+	form="@id('fx') @load(vm.selectedData) @save(vm.selectedData, before='saveData')">
+	<vlayout>
+		<grid>
+			<columns>
+				<column width="100px"></column>
+			</columns>
+			<rows>
+				<row>
+					Id
+					<label value="@load(fx.dataPK.dataId)" />
+				</row>
+				<row>
+					Name:
+					<textbox value="@bind(fx.name)"
+						readonly="@load(vm.dataDialogMode eq 3)"  width="300px"/>
+				</row>
+				<row>
+					Original file name:
+					<textbox value="@bind(fx.originalFileName)"
+						readonly="@load(vm.dataDialogMode eq 3)" width="300px"/>
+				</row>
+				<row>
+					File type:
+					<textbox value="@bind(fx.fileTypeDescription)"
+						readonly="@load(vm.dataDialogMode eq 3)" />
+				</row>
+				<row>
+					Dump info:
+					<textbox value="@bind(fx.dumpInfo)" width="99%"
+						rows="20" readonly="@load(vm.dataDialogMode eq 3)" />
+				</row>
+				<row>
+					Dimensions:
+					<listbox vflex="1" hflex="1"
+						model="@load(fx.dimensionList)">
+						<listhead>
+							<listheader hflex="1">Name</listheader>
+							<listheader hflex="1">Size</listheader>
+							<listheader hflex="1">From</listheader>
+							<listheader hflex="1">To</listheader>
+							<listheader hflex="1">Delta</listheader>
+							<listheader hflex="1">Units</listheader>
+						</listhead>
+						<template name="model" var="item">
+							<listitem>
+								<listcell
+									label="@load(item.dimensionPK.name)" />
+								<listcell label="@load(item.size)" />
+								<listcell label="@load(item.a)" visible="@load(not empty item.a)"/>
+								<listcell label="@load(item.ADate) @converter('formatedDate', format='yyyy-MM-dd hh:mm')" visible="@load(not empty item.ADate)" />
+								<listcell label="@load(item.b)" visible="@load(not empty item.b)"/>
+								<listcell label="@load(item.BDate) @converter('formatedDate', format='yyyy-MM-dd hh:mm')" visible="@load(not empty item.BDate)" />
+								<listcell label="@load(item.delta)" visible="@load(not empty item.delta)"/>
+								<listcell label="@load(vm.concat(item.deltaDate,' ',item.unitsDeltaDate))" visible="@load(not empty item.deltaDate)" />
+								<listcell label="@load(item.units)" />
+							</listitem>
+						</template>
+					</listbox>
+				</row>
+			</rows>
+		</grid>
+		<div align="center">
+			<hlayout>
+				<button id="closeBtn" hflex="0" label="Close"
+					onClick="@command('closeDataDialog')" />
+			</hlayout>
+		</div>
+	</vlayout>
+</window>

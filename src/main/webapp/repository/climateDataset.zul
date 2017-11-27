@@ -1,0 +1,112 @@
+<hlayout vflex="1" hflex="1" apply="org.zkoss.bind.BindComposer"
+	viewModel="@id('vm') @init('org.gcta.sdw.web.viewmodel.ClimateDatasetVM')">
+
+	<!-- 	Datasets -->
+	<vbox hflex="1" vflex="1">
+		<!-- 		<label value="${arg.datasetType}"/> -->
+		<listbox hflex="1" vflex="1" model="@load(vm.datasets)"
+			selectedItem="@bind(vm.selectedDataset)">
+			<auxhead>
+				<auxheader colspan="3">Datasets</auxheader>
+			</auxhead>
+			<listhead>
+				<listheader width="50px">Id</listheader>
+				<listheader hflex="1">Short name</listheader>
+				<listheader hflex="3">Long name</listheader>
+			</listhead>
+			<template name="model" var="item">
+				<listitem>
+					<listcell label="@load(item.datasetId)" />
+					<listcell label="@load(item.shortName)" />
+					<listcell label="@load(item.longName)" />
+				</listitem>
+			</template>
+		</listbox>
+		<hbox hflex="1">
+			<button label="Add" onClick="@command('addDataset')"
+				hflex="1" vflex="1" />
+			<button label="Edit" onClick="@command('editDataset')"
+				disabled="@load(empty vm.selectedDataset)" hflex="1" vflex="1" />
+			<button id="deleteCommand" label="Delete"
+				onClick="@command('deleteDataset')"
+				disabled="@load(empty vm.selectedDataset)" hflex="1" vflex="1" />
+			<button label="Refresh" onClick="@command('refreshDataset')"
+				hflex="1" vflex="1" />
+		</hbox>
+	</vbox>
+
+	<!-- 	Data -->
+	<vbox hflex="2" vflex="1">
+		<listbox id="dataLb" vflex="1" hflex="1"
+			model="@load(vm.selectedDataset.dataList)"
+			selectedItem="@bind(vm.selectedData)">
+			<auxhead>
+				<auxheader colspan="4">Files</auxheader>
+			</auxhead>
+			<listhead>
+				<listheader width="40px">Id</listheader>
+				<listheader hflex="1">Name</listheader>
+				<listheader hflex="3">Original name</listheader>
+				<listheader hflex="1">File type</listheader>
+			</listhead>
+			<template name="model" var="item">
+				<listitem>
+					<listcell label="@load(item.dataPK.dataId)" />
+					<listcell label="@load(item.name)" />
+					<listcell label="@load(item.originalFileName)" />
+					<listcell label="@load(item.fileTypeDescription)" />
+				</listitem>
+			</template>
+		</listbox>
+		<hbox hflex="1" pack="center">
+			<button label="More info" onClick="@command('moreDataInfo')"
+				disabled="@load(empty vm.selectedData)" width="100px" vflex="1" />
+			<button label="Upload file" upload="true,maxsize=1000000"
+				autodisable="self"
+				onUpload="@command('uploadFile', media=event.media)"
+				disabled="@load(empty vm.selectedDataset)" width="100px" />
+			<button label="Delete" onClick="@command('deleteData')"
+				disabled="@load(empty vm.selectedData)" width="100px" vflex="1" />
+			<button label="Preloaded" autodisable="self"
+				onClick="@command('showPreloaded')"
+				disabled="@load(empty vm.selectedDataset)" width="100px" />
+		</hbox>
+	</vbox>
+
+	<!-- Variables -->
+	<vbox hflex="1" vflex="1">
+		<listbox id="variableLb" vflex="1" hflex="1"
+			model="@load(vm.selectedData.datavariableList)"
+			selectedItem="@bind(vm.selectedVariable)">
+			<auxhead>
+				<auxheader colspan="4">Variables</auxheader>
+			</auxhead>
+			<listhead>
+				<listheader width="50px">Id</listheader>
+				<listheader>Short name</listheader>
+				<listheader>Units</listheader>
+				<listheader>Levels</listheader>
+			</listhead>
+			<template name="model" var="item">
+				<listitem>
+					<listcell
+						label="@load(item.datavariablePK.variableId)" />
+					<listcell label="@load(item.shortName)" />
+					<listcell label="@load(item.units)" />
+					<listcell label="@load(item.levels)" />
+				</listitem>
+			</template>
+		</listbox>
+		<hbox hflex="1" pack="center">
+			<button label="More info" onClick="@command('moreVariable')"
+				disabled="@load(empty vm.selectedVariable)" width="150px" />
+		</hbox>
+	</vbox>
+
+	<!-- 	Windows -->
+	<include src="/repository/datasetDialog.zul" datasetType="1" />
+	<include src="/repository/dataDialog.zul" />
+	<include src="/repository/variableDialog.zul" datasetType="1" />
+	<!-- 	<label value="${arg.datasetType == 1? 'Hola' : 'mundo'}" /> -->
+	<include src="/repository/preloadedGcmsDialog.zul" />
+</hlayout>

@@ -1,0 +1,4 @@
+mysql -u root;
+
+SET GLOBAL max_allowed_packet = 1024*1024*number of MB
+SET GLOBAL max_allowed_packet = 10G;

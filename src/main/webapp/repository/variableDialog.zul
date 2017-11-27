@@ -1,0 +1,125 @@
+<!-- arg.datasetType: 1:for climate variables 2:for observation variables -->
+<window title="Variable" mode="modal" border="normal" width="500px"
+	position="center,center" visible="@load(vm.variableDialogMode > 0)">
+	<vlayout>
+		<grid>
+			<columns>
+				<column width="100px"></column>
+			</columns>
+			<rows>
+				<row>
+					Id
+					<label
+						value="@load(vm.selectedVariable.datavariablePK.variableId)" />
+				</row>
+				<row>
+					Short name:
+					<textbox
+						value="@bind(vm.selectedVariable.shortName)"
+						readonly="@load(vm.variableDialogMode eq 3)" />
+				</row>
+				<row>
+					Full name:
+					<textbox value="@bind(vm.selectedVariable.fullName)"
+						readonly="@load(vm.variableDialogMode eq 3)" />
+				</row>
+				<row>
+					Standardized variable:
+					<listbox model="@load(vm.standardizedVars)"
+						selectedItem="@bind(vm.selectedVariable.metavariableenum)"
+						mold="select" disabled="@load(vm.variableDialogMode eq 3)">
+						<listhead>
+							<!-- 							<listheader label="Id" width="50px" /> -->
+							<listheader label="Name" width="140px" />
+						</listhead>
+						<template name="model" var="item">
+							<listitem>
+								<!-- 								<listcell -->
+								<!-- 									label="@load(item.stdVarId)" /> -->
+								<listcell label="@load(item.name)" />
+							</listitem>
+						</template>
+					</listbox>
+				</row>
+				<row>
+					Description:
+					<textbox
+						value="@bind(vm.selectedVariable.description)" width="99%"
+						rows="3" readonly="@load(vm.variableDialogMode eq 3)" />
+				</row>
+				<row visible="${arg.datasetType == 1}">
+					Data type:
+					<textbox value="@bind(vm.selectedVariable.dataType)"
+						readonly="@load(vm.variableDialogMode eq 3)" />
+				</row>
+				<row>
+					Units:
+					<textbox value="@bind(vm.selectedVariable.units)"
+						readonly="@load(vm.variableDialogMode eq 3)" />
+				</row>
+				<row visible="${arg.datasetType == 1}">
+					Levels:
+					<textbox value="@bind(vm.selectedVariable.levels)"
+						readonly="@load(vm.variableDialogMode eq 3)" />
+				</row>
+				<row visible="${arg.datasetType == 1}">
+					Level units:
+					<textbox
+						value="@bind(vm.selectedVariable.levelUnits)"
+						readonly="@load(vm.variableDialogMode eq 3)" />
+				</row>
+				<row visible="${arg.datasetType == 2}">
+					Time serie:
+					<vbox>
+						<listbox vflex="1" hflex="1"
+							model="@load(vm.selectedVariable.timeserieList)" height="250px"
+							emptyMessage="No data" mold="paging" pageSize="20">
+							<listhead>
+								<listheader hflex="1">Date</listheader>
+								<listheader hflex="1">Value</listheader>
+							</listhead>
+							<template name="model" var="item">
+								<listitem>
+									<listcell
+										label="@load(item.timeseriePK.dateTime) @converter('formatedDate', format='yyyy-MM-dd')" />
+									<listcell label="@load(item.value)" />
+								</listitem>
+							</template>
+						</listbox>
+						<hbox hflex="1" pack="center">
+							<button label="Load from CSV"
+								upload="true,maxsize=10000" autodisable="self"
+								onUpload="@command('uploadTimeSerieCsv', media=event.media)"
+								width="150px" visible="@load(vm.variableDialogMode lt 3)" />
+						</hbox>
+					</vbox>
+				</row>
+				<row visible="${arg.datasetType == 2}">
+					Time resolution:
+					<vbox>
+						<hbox>
+							<textbox
+								value="@bind(vm.selectedVariable.fromDate) @converter('formatedDate', format='yyyy-MM-dd')"
+								readonly="true" width="75px" />
+							<label value=" - " />
+							<textbox
+								value="@bind(vm.selectedVariable.toDate) @converter('formatedDate', format='yyyy-MM-dd')"
+								readonly="true" width="75px" />
+							<label value=" : " />
+							<textbox
+								value="@bind(vm.selectedVariable.timeperiodicity.timeId)"
+								readonly="true" width="75px" />
+						</hbox>
+					</vbox>
+				</row>
+			</rows>
+		</grid>
+		<hbox hflex="1" pack="center">
+			<button label="Save" onClick="@command('saveVariable')"
+				visible="@load(vm.variableDialogMode lt 3)" />
+			<button label="Close"
+				onClick="@command('closeVariableDialog')" />
+		</hbox>
+		<!-- 		<label value="${arg.datasetType == 1}" /> -->
+	</vlayout>
+</window>
